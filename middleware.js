@@ -1,3 +1,5 @@
+const Campground=require('./models/campground');
+const catchAsync=require('./utils/catchAsync');
 const {CampgroundSchema}=require('./schemas.js');
 
 module.exports.isValidCampGround=(req,res,next)=>{
@@ -39,3 +41,15 @@ module.exports.isNotLoggedIn=(req,res,next)=>{
         next();
     }
 }
+
+module.exports.isValidUser=catchAsync(async(req,res,next)=>{
+    const {id}=req.params;
+    const camp= await Campground.findById(id);
+    if(camp.author.equals(req.user.id)){
+        next();
+    }
+    else{
+        req.flash('error','you are not allowed to do that!!');
+        res.redirect(`/campgrounds/${id}`);
+    }
+});
