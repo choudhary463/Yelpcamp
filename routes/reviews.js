@@ -5,9 +5,24 @@ const ExpressError=require('../utils/ExpressError');
 const Campground=require('../models/campground');
 const Review=require('../models/review');
 const {isValidCampGround,isvalidID,isLoggedIn,isValidUser}=require('../middleware');
+const user = require('../models/user');
 
-router.get('/reviews',isvalidID,catchAsync(async (req,res,next)=>{
-    res.render('reviews/index');
+router.get('/reviews',isvalidID,catchAsync(async (req,res)=>{
+    const {id}=req.params;
+    const camp=await Campground.findById(id);
+    const reviews=await Review.find({campground:id});
+    let ratingCount=[];
+    let reviewCount=0;
+    for(let i=0;i<=5;i++){
+        ratingCount.push(0);
+    }
+    for(let rev of reviews){
+        ratingCount[rev.rating]+=1;
+        if(rev.body) reviewCount+=1;
+    }
+    let review=null;
+    if(req.user) review=await Review.findOne({campground:id,author:req.user.id});
+    res.render('reviews/index',{camp,title:'reviews',reviews,reviewCount,ratingCount,review});
 }));
 
 router.get('/reviews/edit',isvalidID,isLoggedIn,catchAsync(async (req,res)=>{

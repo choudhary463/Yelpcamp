@@ -1,1 +1,88 @@
-<h1>index</h1>
+<% layout('layouts/boilerplate') %> 
+
+<%- include('../partials/flash') %> 
+
+<div class="container">
+    <div class="row ">
+      <div class="col-md-4 bg-light">
+        <div class="d-flex flex-column text-center">
+            <div class="rating-box">
+                <% if(camp.totalUsers){%> 
+                    <h1 class="pt-4"><%= (camp.totalRating/camp.totalUsers).toFixed(2) %> </h1>
+                    <p class="">out of 5</p>
+                <% }else{ %> 
+                    <h3 class="pt-3 mt-3">No ratings yet!!</h3>
+                <% } %> 
+                <p><%= reviews.length %> Rating and <%= reviewCount %> Reviews</p>
+            </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+          <h3>Ratings</h3>
+          <% for(let i=1;i<=5;i++){%>
+            <div class="row">
+                <div class="col-md-1 text-end mt-2 pt-1 pr-0">
+                    <span><strong><%= i %></strong></span>
+                </div>
+                <div class="col mx-0 px-0">
+                    <div class="progress my-1 mt-3">
+                        <div class="progress-bar" role="progressbar" style="width: <%= (100*ratingCount[i]/Math.max(1,reviews.length)).toFixed() %>%;" aria-valuenow="<%= (100*ratingCount[i]/Math.max(1,reviews.length)).toFixed() %>" aria-valuemin="0" aria-valuemax="100"><%= (100*ratingCount[i]/Math.max(1,reviews.length)).toFixed() %>%</div>
+                    </div>
+                </div>
+            </div>
+          <% } %> 
+      </div>
+      <div class="col-md-4">
+        <%if(!(currentUser&&camp.author.equals(currentUser.id))){%>
+            <% if(review) {%>
+                <div class="text-center">
+                    <h6 class="d-inline">your review</h6>
+                    <a href="/campgrounds/<%= camp.id %>/reviews/edit" class="btn btn-primary btn-sm" role="button">Edit</a>
+                    <form class="d-inline" action="/campgrounds/<%= camp.id %>/reviews?_method=DELETE" method="POST">
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </div>
+                <div class="card mt-1">
+                    <div class="card-body pt-0"></div>
+                        <div class="d-flex justify-content-center">
+                            <h5><%= review.rating %>/5</h5>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <p class="px-5"><%= review.body %></p>
+                        </div>
+                    </div>
+                </div>
+            <% }else{ %>
+                <div class="d-flex justify-content-center">
+                    <h6>Leave a Review</h6>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <form action="/campgrounds/<%=camp.id%>/reviews" method="POST" class="mb-3">
+                        <div class="mb-3">
+                            <label class="form-label" for="rating">Rating</label>
+                            <input class="form-range" type="range" min="1" max="5" name="rating" id="rating" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="body">Review</label>
+                            <textarea class="form-control" name="body" id="body" cols="30" rows="3"></textarea>
+                        </div>
+                        <button class="btn btn-success">Submit</button>
+                    </form>
+                </div>
+            <% } %>
+        <% } %> 
+      </div>
+    </div>
+    <div class="row">
+        <h2 class="mt-3 text-center">All reviews</h2>
+        <% for(let rev of reviews){%>
+            <div class="card w-50 mb-3 offset-3">
+                <div class="d-flex justify-content-between">
+                    <a href="/profile/<%= rev.author %>">author</a>
+                    <p class="card-title">Rating: <strong><%= rev.rating %>/5</strong></p>
+                </div>
+                <p class="card-text"><strong>Review:</strong> <%= rev.body %> </p>
+            </div>
+        <% } %> 
+    </div>
+  </div>

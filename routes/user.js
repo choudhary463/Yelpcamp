@@ -1,6 +1,7 @@
 const express=require('express');
 const passport = require('passport');
 const router=express.Router();
+const Campground=require('../models/campground');
 const User=require('../models/user');
 const catchAsync=require('../utils/catchAsync');
 const {isLoggedIn,isNotLoggedIn}=require('../middleware');
@@ -45,6 +46,13 @@ router.get('/logout',isLoggedIn,(req,res)=>{
 router.get('/profile/:id',catchAsync( async (req,res)=>{
     const {id}=req.params;
     const user=await User.findById(id);
-    res.render('user/profile',{name:user.name});
+    if(user){
+        const campgrounds=await Campground.find({author:id});
+        res.render('user/profile',{user,title:user.name,campgrounds});
+    }
+    else{
+        req.flash('error','invalid user');
+        res.redirect('/campgrounds');
+    }
 }));
 module.exports=router;
