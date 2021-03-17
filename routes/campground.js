@@ -3,6 +3,7 @@ const router=express.Router();
 const catchAsync=require('../utils/catchAsync');
 const ExpressError=require('../utils/ExpressError');
 const Campground=require('../models/campground');
+const Review=require('../models/review');
 const {isValidCampGround,isvalidID,isLoggedIn,isValidUser}=require('../middleware');
 
 
@@ -23,12 +24,11 @@ router.post('/',isValidCampGround,isLoggedIn,catchAsync( async (req,res)=>{
 router.get('/:id',isvalidID,catchAsync(async (req,res,next)=>{
     const {id}=req.params;
     const camp=await Campground.findById(id);
-    if(camp){
-        res.render('campground/campground',{camp,title:`${camp.title}`});
-    }
-    else{
-        throw new ExpressError('campground not found',404);
-    }
+    let userId=null;
+    if(req.user) userId=req.user.id;
+    let review=null;
+    if(userId) review=await Review.findOne({campground:id,author:userId});
+    res.render('campground/campground',{camp,title:`${camp.title}`,review});
 }));
 router.put('/:id',isvalidID,isValidCampGround,isLoggedIn,isValidUser, catchAsync(async (req,res)=>{
     const {id}=req.params;
@@ -45,6 +45,7 @@ router.delete('/:id',isvalidID,isLoggedIn,isValidUser,catchAsync(async (req,res)
     const {id}=req.params;
     const camp=await Campground.findById(id);
     await camp.delete();
+    await Review.deleteMany({campground:id});
     req.flash('success','Successfully deleted campground');
     res.redirect('/campgrounds');
 }));

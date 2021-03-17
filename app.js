@@ -12,6 +12,7 @@ const passportLocal=require('passport-local');
 const User=require('./models/user');
 const campgroundsRoute=require('./routes/campground');
 const userRoute=require('./routes/user');
+const reviewsRoute=require('./routes/reviews');
 
 mongoose.connect('mongodb://localhost:27017/yelpcamp',{
     useNewUrlParser:true,
@@ -62,6 +63,7 @@ app.get('/',(req,res)=>{
 
 app.use('/',userRoute);
 app.use('/campgrounds',campgroundsRoute);
+app.use('/campgrounds/:id',reviewsRoute);
 
 app.all('*',(req,res,next)=>{
     next(new ExpressError('Page not Found',404));

@@ -2,23 +2,83 @@
 
 <%- include('../partials/flash') %> 
 
-
-<div class="card container" style="width: 40rem;">
-    <img src="<%= camp.image %> " class="card-img-top" alt="..." height="400" width="100">
-    <div class="card-body">
-      <h5 class="card-title"><%=  camp.title %></h5>
-      <p class="card-text"><%= camp.description %> </p>
+<div class="row">
+    <div class="col-6">
+        <div class="mb-3">
+            <img src="<%= camp.image %>" class="card-img-top" alt="..." width="400" height="400">
+        </div>
     </div>
-    <ul class="list-group list-group-flush">
-      <li class="list-group-item">Price: <%= camp.price %>$</li>
-      <li class="list-group-item">Location: <%= camp.location %> </li>
-    </ul>
-    <% if(currentUser&&camp.author.equals(currentUser.id)){%> 
-    <div class="card-body">
-      <a class="btn btn-primary" href="/campgrounds/<%= camp.id%>/edit">Edit</a>
-      <form class="d-inline" action="/campgrounds/<%=  camp.id%>?_method=DELETE" method="POST">
-        <button class="btn btn-primary">Delete</button>
-    </form>
-    <% }%> 
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between">
+                    <h1 class="inline"><%= camp.title %></h1>
+                    <a href="/profile/<%= camp.author %>">author</a>
+                </div>
+                <p class="card-text"><%= camp.description %> </p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item text-muted"><%= camp.location%> </li>
+                <li class="list-group-item"><strong>$<%= camp.price %>/night</strong></li>
+            </ul>
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <p><strong>Ratings and Reviews</strong></p>
+                    <% if(camp.totalUsers) {%>
+                        <a href="/campgrounds/<%= camp.id %>/reviews"><%= (camp.totalRating/(camp.totalUsers)).toFixed(2) %>/5 </a>
+                    <% }else{ %>
+                        <p>No ratings yet</p>
+                    <% } %>   
+                </div>
+                <%if(!(currentUser&&camp.author.equals(currentUser.id))){%>
+                    <% if(review) {%>
+                        <div class="text-center">
+                            <h6 class="d-inline">your review</h6>
+                            <a href="/campgrounds/<%= camp.id %>/reviews/edit" class="btn btn-primary btn-sm" role="button">Edit</a>
+                            <form class="d-inline" action="/campgrounds/<%= camp.id %>/reviews?_method=DELETE" method="POST">
+                                <button class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
+                        <div class="card mt-1">
+                            <div class="card-body pt-0"></div>
+                                <div class="d-flex justify-content-center">
+                                    <h5><%= review.rating %>/5</h5>
+                                </div>
+                                <div class="d-flex justify-content-center">
+                                    <p class="px-5"><%= review.body %></p>
+                                </div>
+                            </div>
+                        </div>
+                    <% }else{ %>
+                        <div class="d-flex justify-content-center">
+                            <h6>Leave a Review</h6>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <form action="/campgrounds/<%=camp.id%>/reviews" method="POST" class="mb-3">
+                                <div class="mb-3">
+                                    <label class="form-label" for="rating">Rating</label>
+                                    <input class="form-range" type="range" min="1" max="5" name="rating" id="rating" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label" for="body">Review</label>
+                                    <textarea class="form-control" name="body" id="body" cols="30" rows="3"></textarea>
+                                </div>
+                                <button class="btn btn-success">Submit</button>
+                            </form>
+                        </div>
+                    <% } %>
+                <% } %> 
+            </div>
+            <%if(currentUser&&camp.author.equals(currentUser.id)){%>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <a href="/campgrounds/<%= camp.id %>/edit" class="btn btn-primary" role="button">Edit</a>
+                        <form class="d-inline" action="/campgrounds/<%=camp.id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </li>
+                  </ul>
+            <% } %>
+        </div>
     </div>
-  </div>
+</div>

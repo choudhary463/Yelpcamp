@@ -7,15 +7,11 @@ const campgroundSchema= new Schema({
     description:String,
     location:String,
     image:String,
+    totalRating:Number,
+    totalUsers:Number,
     author:{
         type:Schema.Types.ObjectId,
         ref:'User'
-    },
-    reviews:[
-        {
-            type:Schema.Types.ObjectId,
-            ref:'Review'
-        }
-    ]
+    }
 });
 module.exports=mongoose.model('Campground',campgroundSchema);

@@ -37,7 +37,7 @@ const seedData= async () =>{
         let RandomLocation=cities[Randomidx].city+", "+cities[Randomidx].state;
         let RandomImage='https://source.unsplash.com/collection/483251';
         let authorID='60507ed0cd06fc1824b5200f';
-        seedCampGrounds.push({title:RandomTitle,price:RandomPrice,description:RandomDescription,location:RandomLocation,image:RandomImage,author:authorID});
+        seedCampGrounds.push({title:RandomTitle,price:RandomPrice,description:RandomDescription,location:RandomLocation,image:RandomImage,author:authorID,totalRaing:0,totalUsers:0});
     }
 };
 seedData();
