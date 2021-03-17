@@ -1,0 +1,22 @@
+<% layout('layouts/boilerplate') %> 
+
+<%- include('../partials/flash') %> 
+
+
+<div class="card container" style="width: 40rem;">
+    <img src="<%= camp.image %> " class="card-img-top" alt="..." height="400" width="100">
+    <div class="card-body">
+      <h5 class="card-title"><%=  camp.title %></h5>
+      <p class="card-text"><%= camp.description %> </p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item">Price: <%= camp.price %>$</li>
+      <li class="list-group-item">Location: <%= camp.location %> </li>
+    </ul>
+    <div class="card-body">
+      <a class="btn btn-primary" href="/campgrounds/<%= camp.id%>/edit">Edit</a>
+      <form class="d-inline" action="/campgrounds/<%=  camp.id%>?_method=DELETE" method="POST">
+        <button class="btn btn-primary">Delete</button>
+    </form>
+    </div>
+  </div>
