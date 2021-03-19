@@ -4,5 +4,5 @@ module.exports.CampgroundSchema=Joi.object({
     price:Joi.number().required().min(0),
     description:Joi.string(),
     location:Joi.string().required(),
-    image:Joi.string().required()
+    deleteImages:Joi.array()
 });

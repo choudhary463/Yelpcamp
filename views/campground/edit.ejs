@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %> 
 <%- include('../partials/flash') %> 
 <h3 class=" d-flex justify-content-center mb-4">Edit Campground</h3>
-<form class="row g-3" action="/campgrounds/<%= camp.id %>?_method=PUT" method="POST">
+<form class="row g-3" action="/campgrounds/<%= camp.id %>?_method=PUT" method="POST" enctype="multipart/form-data">
     <div class="col-md-6">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control" id="title" name="title" value="<%= camp.title %>" required>
@@ -21,9 +21,20 @@
         <label for="location" class="form-label">Location</label>
         <input type="text" class="form-control" id="location" name="location" placeholder="city, state" value="<%= camp.location %>" required>
       </div>
-      <div class="col-12">
-        <label for="image" class="form-label">Image</label>
-        <input type="text" class="form-control" id="image" name="image" placeholder="image link" value="<%= camp.image %>" required>
+      <div class="col-12 border">
+        <p>Select images you want to delete</p>
+        <div class="d-flex justify-content-center">
+          <% camp.images.forEach(function(img,i){%>
+            <div class="text-center">
+              <label class="d-block" for="image<%= i %>"><img src="<%= img.url %>" width="150" height="150"></label>
+              <input type="checkbox" id="image<%= i %>" name="deleteImages[]" value="<%=img.filename%>">
+            </div>
+          <% }) %> 
+        </div>
+      </div>
+      <div class="col-12 border-top">
+        <label for="image" class="form-label"> Add images</label>
+        <input type="file" class="form-control" name="image" id="image" multiple>
       </div>
       <div class="col-12">
         <button type="submit" class="btn btn-primary">Edit</button>

@@ -35,9 +35,14 @@ const seedData= async () =>{
         let RandomDescription=randomName([5,5,5,5,5,5]);
         let Randomidx=Math.floor(Math.random()*cities.length);
         let RandomLocation=cities[Randomidx].city+", "+cities[Randomidx].state;
-        let RandomImage='https://source.unsplash.com/collection/483251';
+        let RandomImage=[
+            {
+                url: 'https://res.cloudinary.com/ac463/image/upload/v1616152802/YelpCamp/anim3_x6opit.jpg',
+                filename: 'YelpCamp/jexqta0gfsjoxdanuojr'
+            }
+        ];
         let authorID='60507ed0cd06fc1824b5200f';
-        seedCampGrounds.push({title:RandomTitle,price:RandomPrice,description:RandomDescription,location:RandomLocation,image:RandomImage,author:authorID,totalRaing:0,totalUsers:0});
+        seedCampGrounds.push({title:RandomTitle,price:RandomPrice,description:RandomDescription,location:RandomLocation,images:RandomImage,author:authorID,totalRaing:0,totalUsers:0});
     }
 };
 seedData();

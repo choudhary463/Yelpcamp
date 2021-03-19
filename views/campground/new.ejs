@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') %>
 <%- include('../partials/flash') %> 
 <h2 class=" d-flex justify-content-center mb-4">New Campground</h2>
-<form class="row g-3 needs-validation" action="/campgrounds" method="POST">
+<form class="row g-3 needs-validation" action="/campgrounds" method="POST" enctype="multipart/form-data">
     <div class="col-md-6">
         <label for="title" class="form-label">Title</label>
         <input type="text" class="form-control" id="title" name="title" required>
@@ -23,7 +23,8 @@
       </div>
       <div class="col-12">
         <label for="image" class="form-label">Image</label>
-        <input type="text" class="form-control" id="image" name="image" placeholder="image link" value="https://source.unsplash.com/collection/483251" required>
+        <input type="file" class="form-control" name="image" id="image" multiple required>
+        <!-- <input type="text" class="form-control" id="image" name="image" placeholder="image link" value="https://source.unsplash.com/collection/483251" required> -->
       </div>
       <div class="col-12">
         <button type="submit" class="btn btn-primary">Create</button>
