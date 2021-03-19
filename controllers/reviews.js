@@ -1,5 +1,6 @@
 const Campground=require('../models/campground');
 const Review=require('../models/review');
+const ExpressError = require('../utils/ExpressError');
 
 module.exports.index=async (req,res)=>{
     const {id}=req.params;
@@ -44,7 +45,8 @@ module.exports.createReview=async (req,res)=>{
         req.flash('error','author cannot add reviews');
         res.redirect(`/campgrounds/${id}`);
     }
-    else{
+    let x=req.body.rating;
+    if(x=="1"||x=="2"||x=="3"||x=="4"||x=="5"){
         const review=new Review(req.body);
         review.campground=id;
         review.author=req.user.id;
@@ -57,6 +59,15 @@ module.exports.createReview=async (req,res)=>{
         await camp.save();
         req.flash('success','review addded successfully');
         res.redirect(`/campgrounds/${id}`);
+    }
+    else{
+        if(x=="0"){
+            req.flash('error','rating must be positive!!');
+            res.redirect(`/campgrounds/${id}`);
+        }
+        else{
+            throw new ExpressError('invalid rating',400);
+        }
     }
 };
 module.exports.editReview=async (req,res)=>{
@@ -74,7 +85,8 @@ module.exports.editReview=async (req,res)=>{
         req.flash('error','you cannnot update this review');
         res.redirect(`/campgrounds/${id}`);
     }
-    else{
+    let x=req.body.rating;
+    if(x=="1"||x=="2"||x=="3"||x=="4"||x=="5"){
         camp.totalRating-=review.rating;
         review.rating=req.body.rating;
         camp.totalRating+=review.rating;
@@ -83,6 +95,15 @@ module.exports.editReview=async (req,res)=>{
         await camp.save();
         req.flash('success','review edited successfully');
         res.redirect(`/campgrounds/${id}`);
+    }
+    else{
+        if(x=="0"){
+            req.flash('error','rating must be positive!!');
+            res.redirect(`/campgrounds/${id}/reviews/edit`);
+        }
+        else{
+            throw new ExpressError('invalid rating',400);
+        }
     }
 };
 

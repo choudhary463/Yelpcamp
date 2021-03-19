@@ -2,6 +2,7 @@
 
 <%- include('../partials/flash') %> 
 
+<link rel="stylesheet" href="/stylesheets/stars.css">
 <div class="container">
     <div class="row ">
       <div class="col-md-4 bg-light">
@@ -45,7 +46,9 @@
                 <div class="card mt-1">
                     <div class="card-body pt-0"></div>
                         <div class="d-flex justify-content-center">
-                            <h5><%= review.rating %>/5</h5>
+                            <p class="starability-result" data-rating="<%= review.rating %>">
+                                Rated: <%= review.rating %>  stars
+                            </p>
                         </div>
                         <div class="d-flex justify-content-center">
                             <p class="px-5"><%= review.body %></p>
@@ -56,12 +59,25 @@
                 <div class="d-flex justify-content-center">
                     <h6>Leave a Review</h6>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="text-center">
                     <form action="/campgrounds/<%=camp.id%>/reviews" method="POST" class="mb-3">
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label class="form-label" for="rating">Rating</label>
                             <input class="form-range" type="range" min="1" max="5" name="rating" id="rating" required>
-                        </div>
+                        </div> -->
+                        <fieldset class="starability-basic" style="margin-left: 100px;">
+                            <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="rating" value="1" />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="rating" value="2" />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="rating" value="3" />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="rating" value="4" />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="rating" value="5" />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
                         <div class="mb-3">
                             <label class="form-label" for="body">Review</label>
                             <textarea class="form-control" name="body" id="body" cols="30" rows="3"></textarea>
@@ -79,9 +95,13 @@
             <div class="card w-50 mb-3 offset-3">
                 <div class="d-flex justify-content-between">
                     <a href="/profile/<%= rev.author %>">author</a>
-                    <p class="card-title">Rating: <strong><%= rev.rating %>/5</strong></p>
+                    <p class="card-title"><strong>
+                        <p class="starability-result" data-rating="<%= rev.rating %>">
+                            Rated: <%= rev.rating %>  stars
+                        </p>
+                    </strong></p>
                 </div>
-                <p class="card-text"><strong>Review:</strong> <%= rev.body %> </p>
+                <p class="card-text text-center"><strong></strong> <%= rev.body %> </p>
             </div>
         <% } %> 
     </div>

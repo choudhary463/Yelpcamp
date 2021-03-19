@@ -2,6 +2,8 @@
 
 <%- include('../partials/flash') %> 
 
+<link rel="stylesheet" href="/stylesheets/stars.css">
+
 <div class="row">
     <div class="col-6">
         <div class="mb-3">
@@ -44,7 +46,7 @@
                 <div class="d-flex justify-content-between">
                     <p><strong>Ratings and Reviews</strong></p>
                     <% if(camp.totalUsers) {%>
-                        <a href="#"><%= (camp.totalRating/(5*camp.totalUsers)).toFixed(2) %>/5 </a>
+                        <a href="#"><%= (camp.totalRating/(camp.totalUsers)).toFixed(2) %>/5 </a>
                     <% }else{ %>
                         <p>No ratings yet</p>
                     <% } %>   
@@ -52,12 +54,21 @@
                 <div class="d-flex justify-content-center">
                     <h6>Edit Review</h6>
                 </div>
-                <div class="d-flex justify-content-center">
+                <div class="text-center">
                     <form action="/campgrounds/<%=camp.id%>/reviews?_method=PUT" method="POST" class="mb-3">
-                        <div class="mb-3">
-                            <label class="form-label" for="rating">Rating</label>
-                            <input class="form-range" type="range" min="1" max="5" name="rating" id="rating" value="<%= review.rating %>" required>
-                        </div>
+                        <fieldset class="starability-basic">
+                            <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" <%= (review.rating==0)?"checked":"" %>   aria-label="No rating." />
+                            <input type="radio" id="first-rate1" name="rating" value="1" <%= (review.rating==1)?"checked":"" %> />
+                            <label for="first-rate1" title="Terrible">1 star</label>
+                            <input type="radio" id="first-rate2" name="rating" value="2" <%= (review.rating==2)?"checked":"" %> />
+                            <label for="first-rate2" title="Not good">2 stars</label>
+                            <input type="radio" id="first-rate3" name="rating" value="3" <%= (review.rating==3)?"checked":"" %> />
+                            <label for="first-rate3" title="Average">3 stars</label>
+                            <input type="radio" id="first-rate4" name="rating" value="4" <%= (review.rating==4)?"checked":"" %> />
+                            <label for="first-rate4" title="Very good">4 stars</label>
+                            <input type="radio" id="first-rate5" name="rating" value="5" <%= (review.rating==5)?"checked":"" %> />
+                            <label for="first-rate5" title="Amazing">5 stars</label>
+                        </fieldset>
                         <div class="mb-3">
                             <label class="form-label" for="body">Review</label>
                             <textarea class="form-control" name="body" id="body" cols="30" rows="3"><%= review.body %></textarea>
