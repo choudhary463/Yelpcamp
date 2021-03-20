@@ -12,11 +12,28 @@ const campgroundSchema= new Schema({
             filename:String
         }
     ],
+    geometry:{
+        type:{
+            type:String,
+            enum:['Point'],
+            required:true
+        },
+        coordinates:{
+            type:[Number],
+            require:true
+        }
+    },
     totalRating:Number,
     totalUsers:Number,
     author:{
         type:Schema.Types.ObjectId,
         ref:'User'
     }
-});
+},{toJSON:{virtuals:true}});
+
+campgroundSchema.virtual('properties.popUpText').get(function(){
+    return `<strong><a href="/campgrounds/${this.id}">${this.title}</a></strong>
+    <p>${this.description.substring(Math.min(this.description.length,20))}...</p>
+    `
+})
 module.exports=mongoose.model('Campground',campgroundSchema);

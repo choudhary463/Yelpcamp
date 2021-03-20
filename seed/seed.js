@@ -1,6 +1,7 @@
 const mongoose=require('mongoose');
 const Campground=require('../models/campground');
 const cities=require('./cities');
+
 mongoose.connect('mongodb://localhost:27017/yelpcamp',{
     useNewUrlParser:true,
     useCreateIndex:true,
@@ -29,11 +30,16 @@ const randomName = (arr)=>{
     return res;
 };
 const seedData= async () =>{
+    let arr=[];
     for(let i=0;i<50;i++){
         let RandomTitle=randomName([3,3]);
         let RandomPrice=(1+Math.random()*10).toFixed(3);
         let RandomDescription=randomName([5,5,5,5,5,5]);
         let Randomidx=Math.floor(Math.random()*cities.length);
+        while(arr.includes(Randomidx)){
+            Randomidx=Math.floor(Math.random()*cities.length);
+        }
+        arr.push(Randomidx);
         let RandomLocation=cities[Randomidx].city+", "+cities[Randomidx].state;
         let RandomImage=[
             {
@@ -42,17 +48,14 @@ const seedData= async () =>{
             }
         ];
         let authorID='60507ed0cd06fc1824b5200f';
-        seedCampGrounds.push({title:RandomTitle,price:RandomPrice,description:RandomDescription,location:RandomLocation,images:RandomImage,author:authorID,totalRaing:0,totalUsers:0});
+        const randomGeometry={
+            type:'Point',
+            coordinates:[cities[Randomidx].longitude,cities[Randomidx].latitude]
+        }
+        console.log(i);
+        seedCampGrounds.push({title:RandomTitle,price:RandomPrice,description:RandomDescription,location:RandomLocation,images:RandomImage,geometry: randomGeometry,author:authorID,totalRaing:0,totalUsers:0});
     }
 };
-seedData();
-Campground.deleteMany({})
-.then((data)=>{
-    console.log(data);
-})
-.catch((err)=>{
-    console.log(err);
-});
 
 const Insert=async ()=>{
     if(seedCampGrounds.length){
@@ -61,6 +64,8 @@ const Insert=async ()=>{
     await Campground.findOne({});
 }
 const InsertData=async ()=>{
+    await Campground.deleteMany({});
+    await seedData();
     await Insert();
     mongoose.connection.close();
 }
