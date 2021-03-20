@@ -28,7 +28,8 @@ mongoose.connect(DbUrl,{
 });
 const db=mongoose.connection;
 db.on('error',console.error.bind('connection error'));
-db.once('open',() =>{
+db.once('open',async() =>{
+    await db.collection('sessions').deleteMany({});
     console.log('database connected');
 });
 
@@ -44,7 +45,7 @@ const sessionConfig={
     store:MongoStore.create({
         mongoUrl:DbUrl,
         secret,
-        touchAfter:24*60*60
+        touchAfter: 24 * 60 * 60
     }),
     secret,
     resave:false,

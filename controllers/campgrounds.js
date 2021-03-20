@@ -44,7 +44,7 @@ module.exports.editCampground=async (req,res)=>{
     camp.images.push(...req.files.map(f=>({url:f.path,filename:f.filename})));
     camp.geometry=geoData.body.features[0].geometry;
     await camp.save();
-    if(req.body.deleteImages.length){
+    if(req.body.deleteImages){
         let remaining=0;
         for(let img of camp.images){
             if(!req.body.deleteImages.includes(img.filename)) remaining++;
