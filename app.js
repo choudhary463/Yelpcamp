@@ -13,6 +13,7 @@ const User=require('./models/user');
 const campgroundsRoute=require('./routes/campground');
 const userRoute=require('./routes/user');
 const reviewsRoute=require('./routes/reviews');
+const helmet=require('helmet');
 
 mongoose.connect('mongodb://localhost:27017/yelpcamp',{
     useNewUrlParser:true,
@@ -44,6 +45,11 @@ const sessionConfig={
 };
 app.use(session(sessionConfig));
 app.use(flash());
+app.use(
+    helmet({
+       contentSecurityPolicy: false,
+    })
+);
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new passportLocal(User.authenticate()));
@@ -59,7 +65,7 @@ app.use((req,res,next)=>{
 })
 
 app.get('/',(req,res)=>{
-    res.send("Ok!");
+    res.render('home');
 });
 
 app.use('/',userRoute);

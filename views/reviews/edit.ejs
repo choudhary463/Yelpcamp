@@ -39,8 +39,11 @@
                 <p class="card-text"><%= camp.description %> </p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item text-muted"><%= camp.location%> </li>
                 <li class="list-group-item"><strong>$<%= camp.price %>/night</strong></li>
+                <li class="list-group-item text-muted">
+                    <%= camp.location%>
+                    <div id='map' style='width: 200px; height: 200px;'></div>
+                </li>
             </ul>
             <div class="card-body">
                 <div class="d-flex justify-content-between">
@@ -80,3 +83,8 @@
         </div>
     </div>
 </div>
+<script>
+    const mapToken= '<%- process.env.TOKEN %>';
+    const camp= <%- JSON.stringify(camp) %>
+</script>
+<script src="/javascripts/map.js"></script>
