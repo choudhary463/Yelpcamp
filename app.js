@@ -1,3 +1,6 @@
+if(process.env.NODE_ENV!=="production"){
+    require('dotenv').config();
+}
 const express = require('express');
 const path=require('path');
 const mongoose=require('mongoose');
@@ -14,8 +17,10 @@ const campgroundsRoute=require('./routes/campground');
 const userRoute=require('./routes/user');
 const reviewsRoute=require('./routes/reviews');
 const helmet=require('helmet');
+const MongoStore = require('connect-mongo');
 
-mongoose.connect('mongodb://localhost:27017/yelpcamp',{
+const DbUrl=process.env.MONGO||'mongodb://localhost:27017/yelpcamp';
+mongoose.connect(DbUrl,{
     useNewUrlParser:true,
     useCreateIndex:true,
     useUnifiedTopology:true,
@@ -34,13 +39,19 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.engine('ejs',ejsMate);
-
+const secret=process.env.SECRET||'secret';
 const sessionConfig={
-    secret:'secret',
+    store:MongoStore.create({
+        mongoUrl:DbUrl,
+        secret,
+        touchAfter:24*60*60
+    }),
+    secret,
     resave:false,
     saveUninitialized:false,
     cookie:{
-        httpOnly:true
+        httpOnly:true,
+        //secure:true
     }
 };
 app.use(session(sessionConfig));
