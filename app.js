@@ -85,12 +85,14 @@ app.use('/campgrounds/:id',reviewsRoute);
 
 app.all('*',(req,res,next)=>{
     next(new ExpressError('Page not Found',404));
-})
+});
 app.use((err,req,res,next)=>{
     const {status=500, message='Something\'s wrong I can feel it'}=err;
     res.status(status).send(message);
-})
-app.listen(3000,()=>{
+});
+
+const port=process.env.PORT||3000;
+app.listen(port,()=>{
     console.log("Running");
 });
 
